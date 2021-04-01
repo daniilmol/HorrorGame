@@ -66,9 +66,12 @@ void Start () {
  public void setSpeed(float speed){
     Cam_speed = speed;
     if(speed == 3){
-       cam.fieldOfView = 80;
+       if(cam.fieldOfView < 80)
+           cam.fieldOfView+=0.4f;
     }else{
-       cam.fieldOfView = 60;
+      if(cam.fieldOfView > 60)
+       cam.fieldOfView-=0.4f;
+       return;
     }
  }
 }
