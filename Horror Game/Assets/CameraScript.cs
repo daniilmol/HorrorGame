@@ -37,8 +37,7 @@ void Start () {
  }
  
  //For setting up the rotation of camera with respect to the mouse position
- void SetRotation()
- { 
+ void SetRotation() { 
  //multiplying the current rotation with the input axis values
  m_camRot = m_camRot* Quaternion.Euler(-Input.GetAxis("Mouse Y")*MouseXSens,0f,0f);
  m_Cam_parentRot= m_Cam_parentRot * Quaternion.Euler(0f,Input.GetAxis("Mouse X")*MouseYSens,0f);
@@ -46,8 +45,7 @@ void Start () {
  transform.localRotation = m_camRot; 
  cam_parent.localRotation = m_Cam_parentRot; 
  }
- void MoveThecamera()
- {
+ void MoveThecamera() {
  //taking horizpontal input into the horizontal variable
  horizontal = Input.GetAxis("Horizontal");
 //changing the parent position based on the camera’s transform.right
