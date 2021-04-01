@@ -8,28 +8,33 @@ public class Flicker : MonoBehaviour
     float timeSinceFlickered = Mathf.Infinity;
     float flickerTime;
     bool flickering;
+    float flicker = 0.2f;
+    float timeSinceNotFlickered = Mathf.Infinity;
 
     void Start() {
-        flickering = true;    
+        flickering = true;
     }
     void initializeFlicker(){
-        if(flickering){
+        if(flickering && timeSinceNotFlickered >= flicker){
             flickering = false;
             System.Random r = new System.Random();
             flickerTime = (float)r.NextDouble();
             timeSinceFlickered = 0;
-            GetComponent<Light>().range = 26.47f;
-            GetComponent<Light>().intensity = 1.5f;
+            GetComponent<Light>().range = 10f;
+            GetComponent<Light>().intensity = 2f;
         }else{
             timeSinceFlickered += Time.deltaTime;
         }
     }
     void Update() {
         initializeFlicker();
-        if(timeSinceFlickered >= flickerTime){
+        if(timeSinceFlickered >= flickerTime && !flickering){
             flickering = true;
-            GetComponent<Light>().range = 10f;
-            GetComponent<Light>().intensity = 0.8f;
+            timeSinceNotFlickered = 0;
+            GetComponent<Light>().range = 9f;
+            GetComponent<Light>().intensity = 1.5f;
+        }else{
+            timeSinceNotFlickered += Time.deltaTime;
         }
     }
 }
