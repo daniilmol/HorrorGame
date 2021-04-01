@@ -17,6 +17,13 @@ public class Power : Interactable {
             }catch(NullReferenceException nre){
             }
         }
+        ParticleSystem[] particles = FindObjectsOfType(typeof(ParticleSystem)) as ParticleSystem[];
+        foreach(ParticleSystem dust in particles){
+            try{
+                dust.Play();
+            }catch(NullReferenceException nre){
+            }
+        }
         //RenderSettings.fog = true;
         //RenderSettings.fogDensity = 0.09f;
     }
