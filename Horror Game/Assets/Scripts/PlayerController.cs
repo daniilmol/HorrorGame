@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour {
         }
     }
     void stopFootsteps(){
-
+        //footstepPlayer.Stop();
     }
 
     void Update(){
