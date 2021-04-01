@@ -3,21 +3,25 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviour {
-    AudioSource footstepPlayer;    
     Vector3 lastPosition;
     [SerializeField]AudioClip[]footsteps;
+    [SerializeField]AudioClip[]flashlightClicks;
+    public AudioSource[] playerSounds;
+    public AudioSource footstepPlayer;    
+    public AudioSource itemPlayer;
 
-    
 
     void Start(){
-        footstepPlayer = GetComponent<AudioSource>();
+        playerSounds = GetComponents<AudioSource>();
+        footstepPlayer = playerSounds[0];
+        itemPlayer = playerSounds[1];
     }
 
     void playFootsteps(){
         int index = Random.Range(0, 7);
         if(!footstepPlayer.isPlaying){
-            footstepPlayer.clip = footsteps[index];
-            footstepPlayer.Play(); 
+            //footstepPlayer.clip = footsteps[index];
+            footstepPlayer.PlayOneShot(footsteps[index]); 
         }
     }
     void stopFootsteps(){
@@ -26,15 +30,22 @@ public class PlayerController : MonoBehaviour {
 
     void checkForInput(){
         if(Input.GetKeyDown(KeyCode.F)){
-            if(!GetComponentInChildren<Light>().enabled)
-                GetComponentInChildren<Light>().enabled = true;
-            else
-                GetComponentInChildren<Light>().enabled = false;
+            if(!GetComponentInChildren<Light>().enabled){
+                if(!itemPlayer.isPlaying){
+                    GetComponentInChildren<Light>().enabled = true;
+                    itemPlayer.PlayOneShot(flashlightClicks[0]);
+                }
+            }else{
+                if(!itemPlayer.isPlaying){
+                    GetComponentInChildren<Light>().enabled = false;
+                    itemPlayer.PlayOneShot(flashlightClicks[1]);
+                }
+            }
         }
         if(Input.GetKey(KeyCode.LeftShift)){
             Camera mainCamera = GameObject.FindObjectOfType<Camera>();
             mainCamera.GetComponent<CameraScript>().setSpeed(3);
-            footstepPlayer.pitch = 1;
+            footstepPlayer.pitch = 1.5f;
         }if(!Input.GetKey(KeyCode.LeftShift)){
             Camera mainCamera = GameObject.FindObjectOfType<Camera>();
             mainCamera.GetComponent<CameraScript>().setSpeed(2);

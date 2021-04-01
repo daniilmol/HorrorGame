@@ -17,9 +17,11 @@ public class Power : Interactable {
             }catch(NullReferenceException nre){
             }
         }
+        //RenderSettings.fog = true;
+        //RenderSettings.fogDensity = 0.09f;
     }
 
     void Update(){
-        checkAvailability(gameObject);
+        checkAvailability(gameObject, 71);
     }
 }

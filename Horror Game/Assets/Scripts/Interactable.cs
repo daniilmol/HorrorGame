@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class Interactable : MonoBehaviour{
 
-    private float viewAngle = 72f;
+    private float viewAngle = 75f;
     private float maxInteractionDistance = 2f;
     private float distance;
     private float angle;
@@ -18,6 +18,7 @@ public abstract class Interactable : MonoBehaviour{
     * This method sets the current distance the player is from the interactable object. It also sets the angle of where the player looks relative to the interactable object's location.
     */
     private void setVariables(GameObject selectedObject){
+        this.selectedObject = selectedObject;
         distance = Vector3.Distance(player.transform.position, selectedObject.transform.position);
         angle = Vector3.Angle(selectedObject.transform.position - player.transform.position, player.transform.forward);
     }
@@ -27,14 +28,25 @@ public abstract class Interactable : MonoBehaviour{
     * If so, it checks if the player clicks the E button, which calls any overriden Interact() method.
     */
     private void checkForInteraction(){
-        if(distance <= maxInteractionDistance && angle <= viewAngle){
-            if(Input.GetKeyDown(KeyCode.E)){
-                Interact();
+        //print(distance + ", " + angle);
+        Vector3 hostPosition = player.transform.position;
+        Vector3 targetPosition = selectedObject.transform.position;
+        Ray ray = new Ray(hostPosition, (targetPosition-hostPosition).normalized*10);
+        RaycastHit hit;
+        if(Physics.Raycast(ray, out hit, maxInteractionDistance)){
+            if(hit.collider.gameObject == selectedObject || hit.collider.gameObject.transform.parent == selectedObject.transform){
+                float angle = Vector3.Angle((targetPosition - hostPosition), player.transform.forward);
+                if(angle < viewAngle){
+                    if(Input.GetKeyDown(KeyCode.E)){
+                        Interact();
+                    }
+                }
             }
         }
     }
 
-    public void checkAvailability(GameObject selectedObject){
+    public void checkAvailability(GameObject selectedObject, float angle){
+        this.viewAngle = angle;
         setVariables(selectedObject);
         checkForInteraction();
     }
