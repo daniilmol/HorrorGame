@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-
+using System;
 public class PlayerController : MonoBehaviour {
     Vector3 lastPosition;
     [SerializeField]AudioClip[]footsteps;
@@ -9,16 +9,17 @@ public class PlayerController : MonoBehaviour {
     public AudioSource[] playerSounds;
     public AudioSource footstepPlayer;    
     public AudioSource itemPlayer;
-
+    private bool journalOpened;
 
     void Start(){
         playerSounds = GetComponents<AudioSource>();
         footstepPlayer = playerSounds[0];
         itemPlayer = playerSounds[1];
+        journalOpened = false;
     }
 
     void playFootsteps(){
-        int index = Random.Range(0, 7);
+        int index = UnityEngine.Random.Range(0, 7);
         if(!footstepPlayer.isPlaying){
             //footstepPlayer.clip = footsteps[index];
             footstepPlayer.PlayOneShot(footsteps[index]); 
@@ -50,6 +51,15 @@ public class PlayerController : MonoBehaviour {
             Camera mainCamera = GameObject.FindObjectOfType<Camera>();
             mainCamera.GetComponent<CameraScript>().setSpeed(2);
             footstepPlayer.pitch = 0.75f;
+        }
+        if(Input.GetKeyDown(KeyCode.Tab) && !journalOpened){
+            GameObject x = GameObject.Find("Journal");
+            x.transform.GetChild(0).gameObject.SetActive(true);
+            journalOpened = true;
+        }else if(Input.GetKeyDown(KeyCode.Tab) && journalOpened){
+            GameObject x = GameObject.Find("Journal");
+            x.transform.GetChild(0).gameObject.SetActive(false);
+            journalOpened = false;
         }
     }
 

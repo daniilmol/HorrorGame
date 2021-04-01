@@ -23,6 +23,7 @@ public class Flicker : MonoBehaviour
             timeSinceFlickered = 0;
             GetComponent<Light>().range = 10f;
             GetComponent<Light>().intensity = 1f;
+            //GetComponent<AudioSource>().pitch=0.7f;
         }else{
             timeSinceFlickered += Time.deltaTime;
         }
@@ -34,6 +35,7 @@ public class Flicker : MonoBehaviour
             timeSinceNotFlickered = 0;
             GetComponent<Light>().range = 9f;
             GetComponent<Light>().intensity = 0.5f;
+            //GetComponent<AudioSource>().pitch=1f;
         }else{
             timeSinceNotFlickered += Time.deltaTime;
         }
