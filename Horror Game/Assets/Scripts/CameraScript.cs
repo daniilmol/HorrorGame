@@ -19,8 +19,10 @@ public class CameraScript : MonoBehaviour
  // Use this for initialization
  [SerializeField]
  private bool HideTheCursor;
+ private Light flashlight;
 void Start () {
  cam = GetComponent<Camera>();
+ flashlight = GetComponent<Light>();
  m_camRot = transform.localRotation;
  m_Cam_parentRot = cam_parent.localRotation;
  if(HideTheCursor)
@@ -34,6 +36,7 @@ void Start () {
  void Update () {
     SetRotation();
     MoveThecamera();
+    flashlight.intensity=2.5f;
  }
  
  //For setting up the rotation of camera with respect to the mouse position
@@ -58,5 +61,14 @@ void Start () {
  //transform is also 0,0,1 but it also consider rotation too
  //so that it can move in the forward direction considering the  rotation too
  cam_parent.transform.position += cam.transform .forward * vertical * Cam_speed * Time.deltaTime;
+ 
+ }
+ public void setSpeed(float speed){
+    Cam_speed = speed;
+    if(speed == 3){
+       cam.fieldOfView = 80;
+    }else{
+       cam.fieldOfView = 60;
+    }
  }
 }

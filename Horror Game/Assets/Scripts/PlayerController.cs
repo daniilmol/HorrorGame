@@ -7,6 +7,8 @@ public class PlayerController : MonoBehaviour {
     Vector3 lastPosition;
     [SerializeField]AudioClip[]footsteps;
 
+    
+
     void Start(){
         footstepPlayer = GetComponent<AudioSource>();
     }
@@ -22,8 +24,27 @@ public class PlayerController : MonoBehaviour {
         //footstepPlayer.Stop();
     }
 
+    void checkForInput(){
+        if(Input.GetKeyDown(KeyCode.F)){
+            if(!GetComponentInChildren<Light>().enabled)
+                GetComponentInChildren<Light>().enabled = true;
+            else
+                GetComponentInChildren<Light>().enabled = false;
+        }
+        if(Input.GetKey(KeyCode.LeftShift)){
+            Camera mainCamera = GameObject.FindObjectOfType<Camera>();
+            mainCamera.GetComponent<CameraScript>().setSpeed(3);
+            footstepPlayer.pitch = 1;
+        }if(!Input.GetKey(KeyCode.LeftShift)){
+            Camera mainCamera = GameObject.FindObjectOfType<Camera>();
+            mainCamera.GetComponent<CameraScript>().setSpeed(2);
+            footstepPlayer.pitch = 0.75f;
+        }
+    }
+
     void Update(){
         Vector3 currentPosition = transform.position;
+        checkForInput();
         if(currentPosition == lastPosition){
             //Not Moving
             stopFootsteps();
