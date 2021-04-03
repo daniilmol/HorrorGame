@@ -44,11 +44,11 @@ public class PlayerController : MonoBehaviour {
             }
         }
         if(Input.GetKey(KeyCode.LeftShift)){
-            Camera mainCamera = GameObject.FindObjectOfType<Camera>();
+            Camera mainCamera = Camera.main;
             mainCamera.GetComponent<CameraScript>().setSpeed(3);
             footstepPlayer.pitch = 1.5f;
         }if(!Input.GetKey(KeyCode.LeftShift)){
-            Camera mainCamera = GameObject.FindObjectOfType<Camera>();
+            Camera mainCamera = Camera.main;
             mainCamera.GetComponent<CameraScript>().setSpeed(2);
             footstepPlayer.pitch = 0.75f;
         }

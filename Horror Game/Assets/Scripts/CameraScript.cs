@@ -21,6 +21,7 @@ public class CameraScript : MonoBehaviour
  private bool HideTheCursor;
  private Light flashlight;
 void Start () {
+ AudioListener.volume = PlayerPrefs.GetFloat("MasterVolume");
  cam = GetComponent<Camera>();
  flashlight = GetComponent<Light>();
  m_camRot = transform.localRotation;

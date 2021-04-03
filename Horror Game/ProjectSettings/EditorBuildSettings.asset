@@ -6,7 +6,10 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/AssetStoreOriginals/_SNAPS_PrototypingAssets/ModernOffice_Interior/SampleScenes/ModernOffice_Interior_SampleLayout.unity
+    path: Assets/Scenes/MainMenu.unity
+    guid: fd0b050085f5e5e4b8926ba34478d184
+  - enabled: 1
+    path: Assets/Scenes/ModernOffice_Interior_SampleLayout.unity
     guid: 2194fe559202da244a6cc0ad8cbc636d
   - enabled: 1
     path: Assets/AssetStoreOriginals/_SNAPS_PrototypingAssets/ModernOffice_Interior/SampleScenes/ModernOffice_Interior_PrefabLayout.unity

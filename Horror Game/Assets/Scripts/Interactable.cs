@@ -28,11 +28,13 @@ public abstract class Interactable : MonoBehaviour{
     * If so, it checks if the player clicks the E button, which calls any overriden Interact() method.
     */
     private void checkForInteraction(){
-        Vector3 hostPosition = player.transform.position;
+        Vector3 hostPosition = Camera.main.transform.position;
         Vector3 targetPosition = selectedObject.transform.position;
         Ray ray = new Ray(hostPosition, (targetPosition-hostPosition).normalized*10);
+        Debug.DrawRay(hostPosition, (targetPosition-hostPosition).normalized*10);
         RaycastHit hit;
         if(Physics.Raycast(ray, out hit, maxInteractionDistance)){
+            print(hit.collider.gameObject.name + ", " + selectedObject.name);
             if(hit.collider.gameObject == selectedObject || hit.collider.gameObject.transform.parent == selectedObject.transform){
                 float angle = Vector3.Angle((targetPosition - hostPosition), player.transform.forward);
                 if(angle < viewAngle){
