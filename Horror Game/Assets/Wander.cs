@@ -14,6 +14,9 @@ public class Wander : MonoBehaviour
 
     private Transform previousPosition;
     private bool chasing;
+
+    [SerializeField] AudioClip scream;
+    [SerializeField] AudioClip bells;
  
     // Use this for initialization
     void OnEnable () {
@@ -41,6 +44,8 @@ public class Wander : MonoBehaviour
         }else{
             if(chasing){
                 agent.SetDestination(previousPosition.position);
+                GetComponent<AudioSource>().clip=bells;
+                GetComponent<AudioSource>().PlayOneShot(bells);
                 chasing = false;
             }
         }
