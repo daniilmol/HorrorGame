@@ -20,12 +20,18 @@ public class Wander : MonoBehaviour
         agent = GetComponent<NavMeshAgent> ();
         timer = wanderTimer;
         chasing = false;
+         foreach(Transform child in gameObject.transform) {
+             try{
+             child.gameObject.GetComponent<SkinnedMeshRenderer>().enabled = false;
+
+             }catch(MissingComponentException e){}
+         }
     }
- 
+    
     // Update is called once per frame
     void Update () {
         if(Vector3.Distance(GameObject.FindGameObjectWithTag("Player").transform.position, gameObject.transform.position) < 1f){
-            
+
         }
         if(Vector3.Distance(GameObject.FindGameObjectWithTag("Player").transform.position, gameObject.transform.position) < 5f){
             agent.SetDestination(GameObject.FindGameObjectWithTag("Player").transform.position);

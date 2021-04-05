@@ -4,6 +4,15 @@ using UnityEngine;
 using System;
 public class Power : Interactable {
     public override void Interact(){
+        GameObject enemy = GameObject.FindGameObjectWithTag("Enemy");
+        foreach(Transform child in enemy.transform) {
+                         try{
+
+             child.gameObject.GetComponent<SkinnedMeshRenderer>().enabled = true;
+                     }catch(MissingComponentException e){}
+
+        }
+         enemy.GetComponent<AudioSource>().enabled=true;
         gameObject.transform.Find("Power Button").GetComponent<Animator>().SetTrigger("ClickButton");
         Light[] lights = FindObjectsOfType(typeof(Light)) as Light[];
         foreach(Light light in lights){
@@ -14,7 +23,6 @@ public class Power : Interactable {
         foreach(AudioSource ambience in audioSources){
             try{
                 ambience.GetComponentInParent<AudioPlayer>().enabled = true;
-                ambience.GetComponentInParent<AudioSource>().enabled = true;
             }catch(NullReferenceException nre){
             }
         }
