@@ -6,10 +6,15 @@ public class PlayerController : MonoBehaviour {
     Vector3 lastPosition;
     [SerializeField]AudioClip[]footsteps;
     [SerializeField]AudioClip[]flashlightClicks;
+    [SerializeField]GameObject flashlight;
     public AudioSource[] playerSounds;
     public AudioSource footstepPlayer;    
     public AudioSource itemPlayer;
     private bool journalOpened;
+
+    public GameObject getFlashlight(){
+        return flashlight;
+    }
 
     void Start(){
         playerSounds = GetComponents<AudioSource>();
@@ -31,14 +36,16 @@ public class PlayerController : MonoBehaviour {
 
     void checkForInput(){
         if(Input.GetKeyDown(KeyCode.F)){
-            if(!GetComponentInChildren<Light>().enabled){
+            if(!flashlight.GetComponentInChildren<FlashlightOffset>().isOn()){
                 if(!itemPlayer.isPlaying){
-                    GetComponentInChildren<Light>().enabled = true;
+                    flashlight.GetComponentInChildren<FlashlightOffset>().toggle();
+                    //GetComponentInChildren<Light>().enabled = true;
                     itemPlayer.PlayOneShot(flashlightClicks[0]);
                 }
             }else{
                 if(!itemPlayer.isPlaying){
-                    GetComponentInChildren<Light>().enabled = false;
+                    //GetComponentInChildren<Light>().enabled = false;
+                    flashlight.GetComponentInChildren<FlashlightOffset>().toggle();
                     itemPlayer.PlayOneShot(flashlightClicks[1]);
                 }
             }

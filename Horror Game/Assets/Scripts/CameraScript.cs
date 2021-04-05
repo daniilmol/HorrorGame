@@ -19,11 +19,11 @@ public class CameraScript : MonoBehaviour
  // Use this for initialization
  [SerializeField]
  private bool HideTheCursor;
- private Light flashlight;
+ private GameObject flashlight;
 void Start () {
  AudioListener.volume = PlayerPrefs.GetFloat("MasterVolume");
  cam = GetComponent<Camera>();
- flashlight = GetComponent<Light>();
+ flashlight = GetComponentInParent<PlayerController>().getFlashlight();
  m_camRot = transform.localRotation;
  m_Cam_parentRot = cam_parent.localRotation;
  if(HideTheCursor)
@@ -37,7 +37,7 @@ void Start () {
  void Update () {
     SetRotation();
     MoveThecamera();
-    flashlight.intensity=2.5f;
+    //flashlight.GetComponentInChildren<Light>().intensity = 2.5f;
  }
  
  //For setting up the rotation of camera with respect to the mouse position

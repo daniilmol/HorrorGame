@@ -34,7 +34,6 @@ public abstract class Interactable : MonoBehaviour{
         Debug.DrawRay(hostPosition, (targetPosition-hostPosition).normalized*10);
         RaycastHit hit;
         if(Physics.Raycast(ray, out hit, maxInteractionDistance)){
-            print(hit.collider.gameObject.name + ", " + selectedObject.name);
             if(hit.collider.gameObject == selectedObject || hit.collider.gameObject.transform.parent == selectedObject.transform){
                 float angle = Vector3.Angle((targetPosition - hostPosition), player.transform.forward);
                 if(angle < viewAngle){

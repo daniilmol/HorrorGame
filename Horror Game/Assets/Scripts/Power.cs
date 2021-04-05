@@ -14,6 +14,7 @@ public class Power : Interactable {
         foreach(AudioSource ambience in audioSources){
             try{
                 ambience.GetComponentInParent<AudioPlayer>().enabled = true;
+                ambience.GetComponentInParent<AudioSource>().enabled = true;
             }catch(NullReferenceException nre){
             }
         }
