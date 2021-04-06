@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour {
     public AudioSource footstepPlayer;    
     public AudioSource itemPlayer;
     private bool journalOpened;
+    private bool varIsMoving;
 
     public GameObject getFlashlight(){
         return flashlight;
@@ -50,11 +51,11 @@ public class PlayerController : MonoBehaviour {
                 }
             }
         }
-        if(Input.GetKey(KeyCode.LeftShift)){
+        if(Input.GetKey(KeyCode.LeftShift) && varIsMoving){
             Camera mainCamera = Camera.main;
             mainCamera.GetComponent<CameraScript>().setSpeed(3);
             footstepPlayer.pitch = 1.5f;
-        }if(!Input.GetKey(KeyCode.LeftShift)){
+        }if(!Input.GetKey(KeyCode.LeftShift) || !varIsMoving){
             Camera mainCamera = Camera.main;
             mainCamera.GetComponent<CameraScript>().setSpeed(2);
             footstepPlayer.pitch = 0.75f;
@@ -69,11 +70,26 @@ public class PlayerController : MonoBehaviour {
             journalOpened = false;
         }
     }
-
-    void Update(){
+    
+    void isMoving(){
         Vector3 currentPosition = transform.position;
         checkForInput();
         if(currentPosition == lastPosition){
+            //Not Moving
+            lastPosition = currentPosition;
+            varIsMoving = false;
+        }
+        else{
+            //Moving
+            lastPosition = currentPosition;
+            varIsMoving = true;
+        }
+    }
+    
+    void Update(){
+        isMoving();
+        checkForInput();
+        if(!varIsMoving){
             //Not Moving
             stopFootsteps();
         }
@@ -81,6 +97,5 @@ public class PlayerController : MonoBehaviour {
             //Moving
             playFootsteps();
         }
-        lastPosition = currentPosition;
     }
 }

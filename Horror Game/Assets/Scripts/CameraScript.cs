@@ -4,30 +4,32 @@ using UnityEngine;
 
 public class CameraScript : MonoBehaviour
 {
-    //getting the camera component
- private Camera cam;
- //getting the parent of the camera
- public Transform cam_parent;
- //the x and y axis values of the controller or the WSAD
- float horizontal,vertical;
- public float Cam_speed;
- private Quaternion m_camRot, m_Cam_parentRot;
- [SerializeField][Range(1,8)]
- private float MouseXSens=2f;
- [SerializeField][Range(1, 8)]
- private float MouseYSens = 2f;
- // Use this for initialization
- [SerializeField]
- private bool HideTheCursor;
- private GameObject flashlight;
-void Start () {
- AudioListener.volume = PlayerPrefs.GetFloat("MasterVolume");
- cam = GetComponent<Camera>();
- flashlight = GetComponentInParent<PlayerController>().getFlashlight();
- m_camRot = transform.localRotation;
- m_Cam_parentRot = cam_parent.localRotation;
- if(HideTheCursor)
- {
+//Change of fov idk
+[SerializeField]private float fovSpeed;
+//getting the camera component
+private Camera cam;
+//getting the parent of the camera
+public Transform cam_parent;
+//the x and y axis values of the controller or the WSAD
+float horizontal,vertical;
+public float Cam_speed;
+private Quaternion m_camRot, m_Cam_parentRot;
+[SerializeField][Range(1,8)]
+private float MouseXSens=2f;
+[SerializeField][Range(1, 8)]
+private float MouseYSens = 2f;
+// Use this for initialization
+[SerializeField]
+private bool HideTheCursor;
+private GameObject flashlight;
+void Start(){
+   AudioListener.volume = PlayerPrefs.GetFloat("MasterVolume");
+   cam = GetComponent<Camera>();
+   flashlight = GetComponentInParent<PlayerController>().getFlashlight();
+   m_camRot = transform.localRotation;
+   m_Cam_parentRot = cam_parent.localRotation;
+   if(HideTheCursor)
+{
  Cursor.lockState = CursorLockMode.Locked;
  Cursor.visible = false;
  }
@@ -62,17 +64,17 @@ void Start () {
  //transform is also 0,0,1 but it also consider rotation too
  //so that it can move in the forward direction considering the  rotation too
  cam_parent.transform.position += cam.transform .forward * vertical * Cam_speed * Time.deltaTime;
- 
  }
- public void setSpeed(float speed){
-    Cam_speed = speed;
-    if(speed == 3){
-       if(cam.fieldOfView < 80)
-           cam.fieldOfView+=0.4f;
-    }else{
+public void setSpeed(float speed){
+   Cam_speed = speed;
+   if(speed == 3){
+      if(cam.fieldOfView < 80)
+         cam.fieldOfView+=fovSpeed;
+   }
+   else{
       if(cam.fieldOfView > 60)
-       cam.fieldOfView-=0.4f;
-       return;
-    }
- }
+         cam.fieldOfView-=fovSpeed;
+      return;
+      }
+   }
 }
