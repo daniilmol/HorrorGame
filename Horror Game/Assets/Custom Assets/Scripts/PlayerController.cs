@@ -2,7 +2,9 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using UnityEngine.AI;
 public class PlayerController : MonoBehaviour {
+
     Vector3 lastPosition;
     [SerializeField]AudioClip[]footsteps;
     [SerializeField]AudioClip[]flashlightClicks;
@@ -12,6 +14,7 @@ public class PlayerController : MonoBehaviour {
     public AudioSource itemPlayer;
     private bool journalOpened;
     private bool varIsMoving;
+    private bool sneaking;
 
     public GameObject getFlashlight(){
         return flashlight;
@@ -22,6 +25,7 @@ public class PlayerController : MonoBehaviour {
         footstepPlayer = playerSounds[0];
         itemPlayer = playerSounds[1];
         journalOpened = false;
+        sneaking = false;
     }
 
     void playFootsteps(){
@@ -31,27 +35,29 @@ public class PlayerController : MonoBehaviour {
             footstepPlayer.PlayOneShot(footsteps[index]); 
         }
     }
+
     void stopFootsteps(){
         //footstepPlayer.Stop();
     }
 
-    void checkForInput(){
+    private void flashlightCheck(){
         if(Input.GetKeyDown(KeyCode.F)){
             if(!flashlight.GetComponentInChildren<FlashlightOffset>().isOn()){
                 if(!itemPlayer.isPlaying){
                     flashlight.GetComponentInChildren<FlashlightOffset>().toggle();
-                    //GetComponentInChildren<Light>().enabled = true;
                     itemPlayer.PlayOneShot(flashlightClicks[0]);
                 }
             }else{
                 if(!itemPlayer.isPlaying){
-                    //GetComponentInChildren<Light>().enabled = false;
                     flashlight.GetComponentInChildren<FlashlightOffset>().toggle();
                     itemPlayer.PlayOneShot(flashlightClicks[1]);
                 }
             }
         }
-        if(Input.GetKey(KeyCode.LeftShift) && varIsMoving){
+    }
+
+    private void sprintCheck(){
+        if(Input.GetKey(KeyCode.LeftShift) && varIsMoving && !sneaking){
             Camera mainCamera = Camera.main;
             mainCamera.GetComponent<CameraScript>().setSpeed(3);
             footstepPlayer.pitch = 1.5f;
@@ -60,6 +66,9 @@ public class PlayerController : MonoBehaviour {
             mainCamera.GetComponent<CameraScript>().setSpeed(2);
             footstepPlayer.pitch = 0.75f;
         }
+    }
+
+    private void journalCheck(){
         if(Input.GetKeyDown(KeyCode.Tab) && !journalOpened){
             GameObject x = GameObject.Find("Journal");
             x.transform.GetChild(0).gameObject.SetActive(true);
@@ -69,6 +78,26 @@ public class PlayerController : MonoBehaviour {
             x.transform.GetChild(0).gameObject.SetActive(false);
             journalOpened = false;
         }
+    }
+
+    private void sneakCheck(){
+        if(Input.GetKeyDown(KeyCode.LeftControl)){
+            if(!sneaking){
+                GetComponent<NavMeshAgent>().height=0.1f;
+                Camera.main.transform.position=new Vector3(transform.position.x, transform.position.y+0.5f, transform.position.z);
+                sneaking = true;
+            }else if(sneaking){
+                sneaking = false;
+                GetComponent<NavMeshAgent>().height=1.5f;
+                Camera.main.transform.position=new Vector3(transform.position.x, transform.position.y+1.632f, transform.position.z);
+            }
+        }
+    }
+
+    void checkForInput(){
+        flashlightCheck();
+        sprintCheck();
+        sneakCheck();
     }
     
     void isMoving(){
@@ -88,13 +117,10 @@ public class PlayerController : MonoBehaviour {
     
     void Update(){
         isMoving();
-        checkForInput();
         if(!varIsMoving){
-            //Not Moving
             stopFootsteps();
         }
         else{
-            //Moving
             playFootsteps();
         }
     }

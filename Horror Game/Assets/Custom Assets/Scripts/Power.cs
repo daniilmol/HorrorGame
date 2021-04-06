@@ -6,10 +6,9 @@ public class Power : Interactable {
     public override void Interact(){
         GameObject enemy = GameObject.FindGameObjectWithTag("Enemy");
         foreach(Transform child in enemy.transform) {
-                         try{
-
-             child.gameObject.GetComponent<SkinnedMeshRenderer>().enabled = true;
-                     }catch(MissingComponentException e){}
+            try{
+                child.gameObject.GetComponent<SkinnedMeshRenderer>().enabled = true;
+            }catch(MissingComponentException e){}
 
         }
          enemy.GetComponent<AudioSource>().enabled=true;
