@@ -80,6 +80,10 @@ public class Wander : MonoBehaviour
         playAppropriateAudio(bells, scream);
         previousPosition = gameObject.transform;
         chasing = true;     
+        GameObject door = FindClosestDoor();
+        if(Vector3.Distance(transform.position, door.transform.position) < 3f){
+            door.GetComponent<Animator>().SetBool("isopen", true);
+        }
     }
 
     private void losePlayer(){
@@ -89,13 +93,36 @@ public class Wander : MonoBehaviour
             chasing = false;
         }
     }
+    private Vector3 pos;
+
+    public GameObject FindClosestDoor()
+    {
+        GameObject[] gos;
+        gos = GameObject.FindGameObjectsWithTag("Door");
+        GameObject closest = null;
+        float distance = Mathf.Infinity;
+        Vector3 position = transform.position;
+        foreach (GameObject go in gos) {
+            Vector3 diff = go.transform.position - position;
+            float curDistance = diff.sqrMagnitude;
+            if (curDistance < distance) {
+                closest = go;
+                distance = curDistance;
+            }
+        }
+        return closest;
+    }
 
     private void idleWalk(){
        timer += Time.deltaTime;
- 
+        if(timer >= wanderTimer  && transform.position != pos){
+            GameObject door = FindClosestDoor();
+            door.GetComponent<Animator>().SetBool("isopen", true);
+        }
         if (timer >= wanderTimer) {
             Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
             agent.SetDestination(newPos);
+            pos = newPos;
             timer = 0;
         }
     }
@@ -107,7 +134,7 @@ public class Wander : MonoBehaviour
         if(Vector3.Distance(GameObject.FindGameObjectWithTag("Player").transform.position, gameObject.transform.position) < 1f && !GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().isHidden()){
             killPlayer();
         }
-        if(Vector3.Distance(GameObject.FindGameObjectWithTag("Player").transform.position, gameObject.transform.position) < 5f && !GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().isHidden()){
+        if(Vector3.Distance(GameObject.FindGameObjectWithTag("Player").transform.position, gameObject.transform.position) < 10f && !GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().isHidden()){
             chasePlayer();
             return;
         }else{
