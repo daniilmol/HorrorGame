@@ -22,6 +22,7 @@ public class Wander : MonoBehaviour
     void OnEnable () {
         agent = GetComponent<NavMeshAgent> ();
         timer = wanderTimer;
+        GetComponent<AudioSource>().clip=bells;
         chasing = false;
          foreach(Transform child in gameObject.transform) {
              try{
@@ -30,22 +31,59 @@ public class Wander : MonoBehaviour
              }catch(MissingComponentException e){}
          }
     }
-    
+     public static IEnumerator FadeOut (AudioSource audioSource, float FadeTime) {
+        float startVolume = audioSource.volume;
+ 
+        while (audioSource.volume > 0) {
+            audioSource.volume -= startVolume * Time.deltaTime / FadeTime;
+ 
+            yield return null;
+        }
+ 
+        audioSource.Stop ();
+        audioSource.volume = startVolume;
+    }
+    public static IEnumerator FadeIn (AudioSource audioSource, float FadeTime, AudioClip clip) {
+        float startVolume = audioSource.volume;
+ 
+        while (audioSource.volume > 0) {
+            audioSource.volume += startVolume * Time.deltaTime / FadeTime;
+ 
+            yield return null;
+        }
+ 
+        audioSource.Play();
+        audioSource.volume = startVolume;
+    }
     // Update is called once per frame
     void Update () {
         if(Vector3.Distance(GameObject.FindGameObjectWithTag("Player").transform.position, gameObject.transform.position) < 1f){
 
         }
-        if(Vector3.Distance(GameObject.FindGameObjectWithTag("Player").transform.position, gameObject.transform.position) < 5f){
+        if(Vector3.Distance(GameObject.FindGameObjectWithTag("Player").transform.position, gameObject.transform.position) < 5f && !GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().isHidden()){
             agent.SetDestination(GameObject.FindGameObjectWithTag("Player").transform.position);
+            if(GetComponent<AudioSource>().clip==bells){
+                print("stopped");
+                GetComponent<AudioSource>().Stop();
+            }
             previousPosition = gameObject.transform;
             chasing = true;
+            //StartCoroutine (Wander.FadeOut(GetComponent<AudioSource>(), 0.5f));
+            GetComponent<AudioSource>().clip=scream;
+            if(!GetComponent<AudioSource>().isPlaying)
+                GetComponent<AudioSource>().Play();
             return;
         }else{
             if(chasing){
+                //StartCoroutine (Wander.FadeOut(GetComponent<AudioSource>(), 0.5f));
                 agent.SetDestination(previousPosition.position);
+                if(GetComponent<AudioSource>().clip==scream){
+                    GetComponent<AudioSource>().Stop();
+                }
+                print("lost target");
                 GetComponent<AudioSource>().clip=bells;
-                GetComponent<AudioSource>().PlayOneShot(bells);
+                if(!GetComponent<AudioSource>().isPlaying)
+                    GetComponent<AudioSource>().Play();
                 chasing = false;
             }
         }

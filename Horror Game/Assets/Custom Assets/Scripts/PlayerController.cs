@@ -15,6 +15,15 @@ public class PlayerController : MonoBehaviour {
     private bool journalOpened;
     private bool varIsMoving;
     private bool sneaking;
+    private bool hidden;
+
+    public bool isHidden(){
+        return hidden;
+    }
+
+    public void hidePlayer(bool hidden){
+        this.hidden = hidden;
+    }
 
     public GameObject getFlashlight(){
         return flashlight;
@@ -26,6 +35,7 @@ public class PlayerController : MonoBehaviour {
         itemPlayer = playerSounds[1];
         journalOpened = false;
         sneaking = false;
+        hidden = false;
     }
 
     void playFootsteps(){
