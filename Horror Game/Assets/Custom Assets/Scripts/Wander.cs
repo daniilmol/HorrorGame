@@ -20,15 +20,17 @@ public class Wander : MonoBehaviour
  
     void OnEnable () {
         agent = GetComponent<NavMeshAgent> ();
+        if(agent.enabled==false) {
+            foreach(Transform child in gameObject.transform) {
+                try{
+                    child.gameObject.GetComponent<SkinnedMeshRenderer>().enabled = false;
+                }catch(MissingComponentException e){}
+            }
+            return;
+        }
         timer = wanderTimer;
         GetComponent<AudioSource>().clip=bells;
         chasing = false;
-         foreach(Transform child in gameObject.transform) {
-             try{
-             child.gameObject.GetComponent<SkinnedMeshRenderer>().enabled = false;
-
-             }catch(MissingComponentException e){}
-         }
     }
 
     public static IEnumerator FadeOut (AudioSource audioSource, float FadeTime) {
@@ -99,6 +101,9 @@ public class Wander : MonoBehaviour
     }
 
     void Update () {
+        if(agent.enabled==false) {
+            return;
+        }
         if(Vector3.Distance(GameObject.FindGameObjectWithTag("Player").transform.position, gameObject.transform.position) < 1f && !GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().isHidden()){
             killPlayer();
         }

@@ -11,7 +11,10 @@ public class Power : Interactable {
             }catch(MissingComponentException e){}
 
         }
-         enemy.GetComponent<AudioSource>().enabled=true;
+        foreach(Behaviour childComponent in enemy.GetComponentsInChildren<Behaviour>()){
+            childComponent.enabled=true;
+        }
+        //enemy.GetComponent<AudioSource>().enabled=true;
         gameObject.transform.Find("Power Button").GetComponent<Animator>().SetTrigger("ClickButton");
         Light[] lights = FindObjectsOfType(typeof(Light)) as Light[];
         foreach(Light light in lights){
