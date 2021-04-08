@@ -14,9 +14,12 @@ public class Wander : MonoBehaviour
 
     private Transform previousPosition;
     private bool chasing;
+    private Vector3 pos;
 
     [SerializeField] AudioClip scream;
     [SerializeField] AudioClip bells;
+    [SerializeField] float detectionRadius = 5f;
+    [SerializeField] float killRadius = 1f;
  
     void OnEnable () {
         agent = GetComponent<NavMeshAgent> ();
@@ -60,7 +63,13 @@ public class Wander : MonoBehaviour
     }
 
     private void killPlayer(){
-        print("Player is dead");
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().die();
+        GameObject.FindGameObjectWithTag("Player").transform.LookAt(transform);     
+        transform.LookAt(GameObject.FindGameObjectWithTag("Player").transform);   
+        Vector3 x = Vector3.Lerp(transform.position, GameObject.FindGameObjectWithTag("Player").transform.position, 0.5f);   
+        Vector3.MoveTowards(transform.position, x, 1);
+        GetComponent<AudioSource>().Stop();
+        GameObject.Find("Global Audio Player").GetComponent<AudioSource>().Play();
     }
 
     private void playAppropriateAudio(AudioClip clipToStop, AudioClip clipToStart){
@@ -93,7 +102,6 @@ public class Wander : MonoBehaviour
             chasing = false;
         }
     }
-    private Vector3 pos;
 
     public GameObject FindClosestDoor()
     {
@@ -131,10 +139,11 @@ public class Wander : MonoBehaviour
         if(agent.enabled==false) {
             return;
         }
-        if(Vector3.Distance(GameObject.FindGameObjectWithTag("Player").transform.position, gameObject.transform.position) < 1f && !GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().isHidden()){
+        if(Vector3.Distance(GameObject.FindGameObjectWithTag("Player").transform.position, gameObject.transform.position) < killRadius && !GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().isHidden() && !GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().isDead()){
+            agent.isStopped=true;
             killPlayer();
         }
-        if(Vector3.Distance(GameObject.FindGameObjectWithTag("Player").transform.position, gameObject.transform.position) < 10f && !GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().isHidden()){
+        if(Vector3.Distance(GameObject.FindGameObjectWithTag("Player").transform.position, gameObject.transform.position) < detectionRadius && !GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().isHidden()){
             chasePlayer();
             return;
         }else{

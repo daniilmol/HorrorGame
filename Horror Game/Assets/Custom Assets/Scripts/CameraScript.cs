@@ -37,6 +37,9 @@ void Start () {
  
  // Update is called once per frame
  void Update () {
+    if(transform.parent.GetComponent<PlayerController>().isDead()){
+       return;
+    }
     SetRotation();
     MoveThecamera();
     //flashlight.GetComponentInChildren<Light>().intensity = 2.5f;

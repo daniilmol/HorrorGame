@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 public class PlayerController : MonoBehaviour {
 
     Vector3 lastPosition;
@@ -16,6 +17,9 @@ public class PlayerController : MonoBehaviour {
     private bool varIsMoving;
     private bool sneaking;
     private bool hidden;
+    private bool dead;
+    private float timeSinceDead = Mathf.Infinity;
+    private float timeToDie = 7f;
 
     public bool isHidden(){
         return hidden;
@@ -30,6 +34,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     void Start(){
+        dead = false;
         playerSounds = GetComponents<AudioSource>();
         footstepPlayer = playerSounds[0];
         itemPlayer = playerSounds[1];
@@ -124,8 +129,25 @@ public class PlayerController : MonoBehaviour {
             varIsMoving = true;
         }
     }
+
+    public void die(){
+        dead = true;
+        timeSinceDead = 0;
+    }
+
+    public bool isDead(){
+        return dead;
+    }
     
     void Update(){
+        if(dead && timeSinceDead < timeToDie){
+            timeSinceDead += Time.deltaTime;
+            return;
+        }
+        if(dead){
+            LevelChanger lc = FindObjectOfType(typeof(LevelChanger)) as LevelChanger;
+            lc.FadeToLevel(1);
+        }
         isMoving();
         if(!varIsMoving){
             stopFootsteps();

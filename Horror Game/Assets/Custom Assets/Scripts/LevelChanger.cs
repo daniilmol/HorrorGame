@@ -8,9 +8,11 @@ public class LevelChanger : MonoBehaviour
     public Animator animator;
     private int levelToLoad;
     private bool loadingNextScene;
+    private float loadSpeed;
     void Start(){
         GetComponentInChildren<Canvas>().enabled = true;
         loadingNextScene = false;
+        animator = GetComponent<Animator>();
     }
     public void FadeToLevel(int levelIndex){
         if(!loadingNextScene){
