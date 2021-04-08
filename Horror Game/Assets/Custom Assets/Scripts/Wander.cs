@@ -31,6 +31,7 @@ public class Wander : MonoBehaviour
 
  
     void OnEnable () {
+        path = new NavMeshPath();
         canSeePlayer = false;
         searching = false;
         agent = GetComponent<NavMeshAgent> ();
@@ -100,7 +101,7 @@ public class Wander : MonoBehaviour
         playAppropriateAudio(bells, scream);
         previousPosition = gameObject.transform;
         chasing = true;     
-        GameObject door = FindClosestDoor();
+        GameObject door = FindClosestDoor(gameObject);
         if(Vector3.Distance(transform.position, door.transform.position) < 3f){
             door.GetComponent<Animator>().SetBool("isopen", true);
         }
@@ -108,6 +109,7 @@ public class Wander : MonoBehaviour
 Vector3 searchingPosition;
     private void losePlayer(){
         if(chasing){
+            print("Player lost");
             previousPosition = GameObject.FindGameObjectWithTag("Player").transform;
             timeSinceLostPlayer = 0;
             timeSinceStartedSearchingForPlayer = 0;
@@ -119,17 +121,16 @@ Vector3 searchingPosition;
         }else{
             timeSinceLostPlayer = Mathf.Infinity;
             playAppropriateAudio(scream, bells);
-            Vector3 newPos = transform.position;
-            idleWalk(newPos);
+            idleWalk(previousPosition.position);
         }
     }
 
-    public GameObject FindClosestDoor() {
+    public GameObject FindClosestDoor(GameObject local) {
         GameObject[] gos;
         gos = GameObject.FindGameObjectsWithTag("Door");
         GameObject closest = null;
         float distance = Mathf.Infinity;
-        Vector3 position = transform.position;
+        Vector3 position = local.transform.position;
         foreach (GameObject go in gos) {
             Vector3 diff = go.transform.position - position;
             float curDistance = diff.sqrMagnitude;
@@ -148,8 +149,10 @@ Vector3 searchingPosition;
            searching = true;
            timeSinceStartedSearchingForPlayer += Time.deltaTime;
            if(timer >= wanderTimer + 3 && transform.position != pos){
-                GameObject door = FindClosestDoor();
-                door.GetComponent<Animator>().SetBool("isopen", true);
+                GameObject door = FindClosestDoor(gameObject);
+                if(Vector3.Distance(transform.position, door.transform.position) < 3f){
+                    door.GetComponent<Animator>().SetBool("isopen", true);
+                }
             }
             if (timer >= wanderTimer + 3) {
                 Vector3 newPos = RandomNavSphere(searchPosition, 8, -1);
@@ -161,8 +164,10 @@ Vector3 searchingPosition;
             print("not searching...");
             searching = false;
             if(timer >= wanderTimer  && transform.position != pos){
-                GameObject door = FindClosestDoor();
+                GameObject door = FindClosestDoor(gameObject);
+                if(Vector3.Distance(transform.position, door.transform.position) < 3f){
                     door.GetComponent<Animator>().SetBool("isopen", true);
+                }            
             }
                 if (timer >= wanderTimer) {
                     Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
@@ -187,13 +192,25 @@ Vector3 searchingPosition;
             }
         }
     }
+    NavMeshPath path;
+    bool CalculateNewPath() {
+         agent.CalculatePath(GameObject.FindGameObjectWithTag("Player").transform.position, path);
+         print("New path calculated");
+         if (path.status != NavMeshPathStatus.PathComplete) {
+             return false;
+         }
+         else {
+             print("Path Valid");
+             return true;
+         }
+     }
 
     void Update () {
         if(agent.enabled==false) {
             return;
         }
         FireRayCasts();
-        if(Vector3.Distance(GameObject.FindGameObjectWithTag("Player").transform.position, gameObject.transform.position) < killRadius && !GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().isHidden() && !GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().isDead()){
+        if(Vector3.Distance(GameObject.FindGameObjectWithTag("Player").transform.position, gameObject.transform.position) < killRadius && !GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().isHidden() && !GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().isDead() && canSeePlayer){
             agent.isStopped=true;
             killPlayer();
         }

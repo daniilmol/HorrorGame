@@ -20993,7 +20993,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1074060591
 PrefabInstance:
@@ -36250,7 +36250,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4561544271246036, guid: 9b1b38ad56a221f4bb6ad963a1996883, type: 3}
       propertyPath: m_RootOrder
-      value: 11
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4561544271246036, guid: 9b1b38ad56a221f4bb6ad963a1996883, type: 3}
       propertyPath: m_LocalPosition.x
@@ -36517,42 +36517,6 @@ PrefabInstance:
     - target: {fileID: 2616489350008766370, guid: 99e9137a3f1d3b749b168b073755ebc8, type: 3}
       propertyPath: m_Name
       value: the queen of swords
-      objectReference: {fileID: 0}
-    - target: {fileID: 2616489350008766370, guid: 99e9137a3f1d3b749b168b073755ebc8, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2922496283697064657, guid: 99e9137a3f1d3b749b168b073755ebc8, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2922496283697064662, guid: 99e9137a3f1d3b749b168b073755ebc8, type: 3}
-      propertyPath: suspicionTime
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 2922496283697064662, guid: 99e9137a3f1d3b749b168b073755ebc8, type: 3}
-      propertyPath: detectionRadius
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2922496283697064663, guid: 99e9137a3f1d3b749b168b073755ebc8, type: 3}
-      propertyPath: m_Radius
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2922496283697064663, guid: 99e9137a3f1d3b749b168b073755ebc8, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2922496283697064663, guid: 99e9137a3f1d3b749b168b073755ebc8, type: 3}
-      propertyPath: m_AngularSpeed
-      value: 200
-      objectReference: {fileID: 0}
-    - target: {fileID: 2922496283697064663, guid: 99e9137a3f1d3b749b168b073755ebc8, type: 3}
-      propertyPath: m_WalkableMask
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2922496283697064663, guid: 99e9137a3f1d3b749b168b073755ebc8, type: 3}
-      propertyPath: avoidancePriority
-      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3387959950242030872, guid: 99e9137a3f1d3b749b168b073755ebc8, type: 3}
       propertyPath: m_RootOrder
