@@ -152,7 +152,7 @@ Vector3 searchingPosition;
                 door.GetComponent<Animator>().SetBool("isopen", true);
             }
             if (timer >= wanderTimer + 3) {
-                Vector3 newPos = RandomNavSphere(searchPosition, 15, -1);
+                Vector3 newPos = RandomNavSphere(searchPosition, 8, -1);
                 agent.SetDestination(newPos);
                 pos = newPos;
                 timer = 0;
