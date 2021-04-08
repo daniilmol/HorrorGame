@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class Interactable : MonoBehaviour{
 
-    private float viewAngle = 75f;
+    private float viewAngle = 90f;
     private float maxInteractionDistance = 2f;
     private float distance;
     private float angle;
@@ -31,12 +31,12 @@ public abstract class Interactable : MonoBehaviour{
         Vector3 hostPosition = Camera.main.transform.position;
         Vector3 targetPosition = selectedObject.transform.position;
         Ray ray = new Ray(hostPosition, (targetPosition-hostPosition).normalized*10);
-        Debug.DrawRay(hostPosition, (targetPosition-hostPosition).normalized*10);
+        //Debug.DrawRay(hostPosition, (targetPosition-hostPosition).normalized*10);
         RaycastHit hit;
         if(Physics.Raycast(ray, out hit, maxInteractionDistance)){
             if(hit.collider.gameObject == selectedObject || hit.collider.gameObject.transform.parent == selectedObject.transform){
                 float angle = Vector3.Angle((targetPosition - hostPosition), player.transform.forward);
-                if(angle < viewAngle){
+                if(angle <= viewAngle && angle >= -viewAngle){
                     if(Input.GetKeyDown(KeyCode.E)){
                         Interact();
                     }
