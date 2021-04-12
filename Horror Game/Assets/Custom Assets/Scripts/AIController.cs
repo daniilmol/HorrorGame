@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Wander : MonoBehaviour
+public class AIController : MonoBehaviour
 {
    public float wanderRadius;
     public float wanderTimer;
@@ -99,26 +99,46 @@ public class Wander : MonoBehaviour
     private void chasePlayer(){
         agent.SetDestination(GameObject.FindGameObjectWithTag("Player").transform.position);
         playAppropriateAudio(bells, scream);
-        previousPosition = gameObject.transform;
+        //previousPosition = gameObject.transform;
         chasing = true;     
         GameObject door = FindClosestDoor(gameObject);
         if(Vector3.Distance(transform.position, door.transform.position) < 3f){
             door.GetComponent<Animator>().SetBool("isopen", true);
         }
     }
-Vector3 searchingPosition;
     private void losePlayer(){
         if(chasing){
+            agent.ResetPath();
             print("Player lost");
             previousPosition = GameObject.FindGameObjectWithTag("Player").transform;
             timeSinceLostPlayer = 0;
             timeSinceStartedSearchingForPlayer = 0;
             chasing = false;
+            searching = true;
             //agent.SetDestination(previousPosition.position);
-        }else if(timeSinceLostPlayer < suspicionTime){
+        }/**else if(timeSinceLostPlayer < suspicionTime){
             timeSinceLostPlayer+=Time.deltaTime;
             agent.SetDestination(previousPosition.position);
         }else{
+            if(previousPosition == null){
+                idleWalk(randomErrorVector);
+                return;
+            }
+            timeSinceLostPlayer = Mathf.Infinity;
+            playAppropriateAudio(scream, bells);
+            idleWalk(previousPosition.position);
+        }*/
+    }
+
+    private void checkPlayer(){
+        if(timeSinceLostPlayer < suspicionTime && transform.position != previousPosition.position){
+            timeSinceLostPlayer+=Time.deltaTime;
+            agent.SetDestination(previousPosition.position);
+        }else{
+            if(previousPosition == null){
+                idleWalk(randomErrorVector);
+                return;
+            }
             timeSinceLostPlayer = Mathf.Infinity;
             playAppropriateAudio(scream, bells);
             idleWalk(previousPosition.position);
@@ -144,9 +164,8 @@ Vector3 searchingPosition;
 
     private void idleWalk(Vector3 searchPosition){
        timer += Time.deltaTime;
-       if(searchPosition != randomErrorVector && timeSinceStartedSearchingForPlayer < suspicionTime + 20){
+       if(searchPosition != randomErrorVector && timeSinceStartedSearchingForPlayer < suspicionTime + 10){
            print("searching...");
-           searching = true;
            timeSinceStartedSearchingForPlayer += Time.deltaTime;
            if(timer >= wanderTimer + 3 && transform.position != pos){
                 GameObject door = FindClosestDoor(gameObject);
@@ -157,10 +176,15 @@ Vector3 searchingPosition;
             if (timer >= wanderTimer + 3) {
                 Vector3 newPos = RandomNavSphere(searchPosition, 8, -1);
                 agent.SetDestination(newPos);
+                if(searchPosition==GameObject.FindGameObjectWithTag("Player").transform.position){
+                    print("For some reason searching the same place where player is");
+                }
+                print("Selecting random position");
                 pos = newPos;
                 timer = 0;
             }
        }else{
+            previousPosition = null;
             print("not searching...");
             searching = false;
             if(timer >= wanderTimer  && transform.position != pos){
@@ -218,7 +242,10 @@ Vector3 searchingPosition;
             chasePlayer();
             return;
         }else{
-            losePlayer();
+            if(chasing)
+                losePlayer();
+            if(searching)
+                checkPlayer();
         }
         if(!searching)
         idleWalk(randomErrorVector);
