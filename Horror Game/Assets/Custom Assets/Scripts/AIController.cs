@@ -164,7 +164,7 @@ public class AIController : MonoBehaviour
 
     private void idleWalk(Vector3 searchPosition){
        timer += Time.deltaTime;
-       if(searchPosition != randomErrorVector && timeSinceStartedSearchingForPlayer < suspicionTime + 10){
+       if(searchPosition != randomErrorVector && timeSinceStartedSearchingForPlayer < suspicionTime){
            print("searching...");
            timeSinceStartedSearchingForPlayer += Time.deltaTime;
            if(timer >= wanderTimer + 3 && transform.position != pos){
@@ -176,9 +176,6 @@ public class AIController : MonoBehaviour
             if (timer >= wanderTimer + 3) {
                 Vector3 newPos = RandomNavSphere(searchPosition, 8, -1);
                 agent.SetDestination(newPos);
-                if(searchPosition==GameObject.FindGameObjectWithTag("Player").transform.position){
-                    print("For some reason searching the same place where player is");
-                }
                 print("Selecting random position");
                 pos = newPos;
                 timer = 0;
